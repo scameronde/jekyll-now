@@ -31,7 +31,7 @@ Der vielleicht stärkste Vorteil gegenüber klassischer imperativer Programmieru
   - Daten gehen an dem einen Ende rein, kommen am anderen Ende raus
   - Keine weiteren Daten spielen eine Rolle, keine Daten werden verändert
       
-==> Kontrollfluss und Datenfluss sind identisch !!!
+==> **Kontrollfluss und Datenfluss sind identisch !!!**
       
 Wieso ist das ein so großer Vorteil?
   
