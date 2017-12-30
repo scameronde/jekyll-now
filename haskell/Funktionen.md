@@ -50,6 +50,8 @@ idA v = v
 Partielle Funktionsdefinition
 --------------------------------
 
+Funktionen können partiell, also nur für einen bestimmten Teil der Eingabemenge definiert werden. Man kann, muss aber nicht, auf die vollständige Abdeckung der Eingabemenge achten.
+
 ```haskell
 printBool :: Bool -> String
 printBool True = "Wahr"
@@ -59,6 +61,8 @@ printBool False = "Falsch"
 
 Partielle Funktionsdefinition mit Guards
 -------------------------------------------
+
+Die partielle Funktionsdefinition war im obigen Beispiel noch einfach durch reine Aufzählung zu erreichen. Bei größeren Mengen geht dies nicht mehr. Stattdessen kann man dies über die Beschreibung der Eigenschaft der Elemente erreichen.
 
 ```haskell
 printOdd :: Int -> String
@@ -70,12 +74,14 @@ printOdd x | (odd x) = "Ungerade"
 Kombinieren von Funktionsaufrufen
 ------------------------------------
 
+Ein Funktionsaufruf alleine macht noch kein Programm. Funktionen müssen nacheinander aufgerufen werden. Dabei ist die korrekte Klammerung zu beachten, sonst werden die falschen Dinge als Parameter betrachtet.
+
+Richtig:
 ```haskell
 odd (length (printBool True))
 ```
 
-aber nicht
-
+Falsch:
 ```haskell
 odd length printBool False
 ```
