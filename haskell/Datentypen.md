@@ -19,7 +19,7 @@ So einfach wie das ist, so mühsam kann das sein. Deswegen kann man Elemente auc
 data Aufzaehlung' = Eins' | Zwei' | Drei' | Viele' Int
 ```
 
-Gültige Elemente von Aufzaehlung' sind also z.B. Zwei', Viele' 5 und Viele' -20
+Gültige Elemente von Aufzaehlung' sind also z.B. `Zwei'`, `Viele' 5` und `Viele' -20`
 
 Es muss aber nicht bei einem Parameter bleiben. Es sind beliebig viele möglich:
 
