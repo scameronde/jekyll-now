@@ -1,3 +1,6 @@
+---
+published: true
+---
 Definition von Mengen über Record-Syntax
 -------------------------------------------
 

@@ -1,3 +1,6 @@
+---
+published: true
+---
 ## Datentypen / Mengen
 
 Definition von Mengen (data) und Zugriff auf Teile von Werten (Pattern Matching)
@@ -50,4 +53,5 @@ addedP = addP (Paar 5 6)
 
 Die Art den Parameter in der Funktionsdefinition zu schreiben ist vergleichbar mit den partiellen Funktionsdefinitionen und nutzt ein Sprachfeature, dass sich Pattern Matching nennt. So kommt man also an den "Inhalt" eines parametrisierten Wertes.
 
-[PREV](/haskell/Funktionen)
+[PREV](/haskell/Funktionen) [NEXT](/haskell/Funktionen-als-Werte)
+
