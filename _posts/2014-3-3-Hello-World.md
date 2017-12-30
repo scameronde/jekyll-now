@@ -1,6 +1,6 @@
 ---
 layout: post
-title: You're up and running!
+title: Platzhalter
 published: true
 ---
-Was mache ich hier ...
+... bis ich hier mal was reinschreibe
