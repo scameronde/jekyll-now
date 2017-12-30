@@ -16,7 +16,7 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
 1. [Funktionen](/haskell/Funktionen)
 1. [Datentypen / Mengen](/haskell/Datentypen)
 1. [Funktionen als Werte](/haskell/Funktionen-als-Werte)
-1. Komposition von Funktionen
+1. [Komposition von Funktionen](/haskell/Komposition-Funktionen)
 1. Kontrollstrukturen
 1. Patterns
     1. Functor
