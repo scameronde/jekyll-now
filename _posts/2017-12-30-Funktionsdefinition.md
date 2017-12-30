@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 ---
 
 Funktionsdefinition
@@ -62,4 +62,3 @@ Kombinieren von Funktionsaufrufen
 aber nicht
     
     odd length printBool False
-    
