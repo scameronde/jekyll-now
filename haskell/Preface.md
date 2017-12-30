@@ -14,4 +14,19 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
 
 1. [FP vs OO](/haskell/fp-vs-oo)
 1. [Funktionen](/haskell/Funktionen)
-
+1. Datentypen / Mengen
+1. Funktionen als Werte
+1. Komposition von Funktionen
+1. Kontrollstrukturen
+1. Patterns
+  1. Functor
+  1. Applicative
+  1. Monad
+  1. Traversable
+  1. Record und Lens
+  1. Monad Transformers
+  1. Effects
+1. Seiteneffekte
+  1. Ein-/Ausgabe
+  1. Variablen
+  1. Concurrency
