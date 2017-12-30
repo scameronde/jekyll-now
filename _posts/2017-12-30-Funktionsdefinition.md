@@ -7,9 +7,10 @@ Funktionsdefinition
 
 Eine Funktiondefinition muss erst den Parametertyp und dann den Typ des Rückgabewerts angeben. Danach folgt die eigentliche Funktionslogik.
 
+```haskell
     f :: String -> Int
     f s = length s
-  
+ ```
 
 Funktionsaufruf
 ------------------
@@ -24,8 +25,10 @@ Generische Funktionsdefinition
 
 Natürlich kann ich für jeden möglichen Typ eine Funktion (hier die Identität) schreiben.
 
+```Haskell
     idI :: Int -> Int
     idI v = v
+```
   
 aber auch
   
