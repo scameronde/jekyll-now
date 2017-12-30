@@ -18,8 +18,8 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
 1. [Funktionen als Werte](/haskell/Funktionen-als-Werte)
 1. [Komposition von Funktionen](/haskell/Komposition-Funktionen)
 1. Kontrollstrukturen
-1. Patterns
-    1. Functor
+1. [Patterns](/haskell/Patterns)
+    1. [Functor](/haskell/Patterns-Functor)
     1. Applicative
     1. Monad
     1. Traversable
