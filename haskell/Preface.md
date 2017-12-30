@@ -23,7 +23,7 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
   1. Applicative
   1. Monad
   1. Traversable
-  1. Record und Lens
+  1. [Record und Lens](/haskell/Records-Lenses)
   1. Monad Transformers
   1. Effects
 1. Seiteneffekte
