@@ -8,9 +8,9 @@ Funktionsdefinition
 Eine Funktiondefinition muss erst den Parametertyp und dann den Typ des Rückgabewerts angeben. Danach folgt die eigentliche Funktionslogik.
 
 ```haskell
-    f :: String -> Int
-    f s = length s
- ```
+f :: String -> Int
+f s = length s
+```
 
 Funktionsaufruf
 ------------------
