@@ -47,3 +47,5 @@ All diese Werte kann eine Methode heranziehen und sogar verändern. D.h. neben d
 ## Aber kann man denn mit so wenig effektiv arbeiten?
   
 Überraschenderweise ja. Man muss nur genauer hinsehen.
+
+[NEXT](/haskell/Funktionen)
