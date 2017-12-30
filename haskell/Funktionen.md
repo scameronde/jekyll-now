@@ -86,4 +86,4 @@ Falsch:
 odd length printBool False
 ```
 
-[PREV](/haskell/fp-vs-oo)
+[PREV](/haskell/fp-vs-oo) [NEXT](/haskell/Datentypen)
