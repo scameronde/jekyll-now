@@ -43,3 +43,4 @@ Zugriff auf Records über Lenses
 
 tbd.
 
+[[TOP]](/haskell/Preface) 

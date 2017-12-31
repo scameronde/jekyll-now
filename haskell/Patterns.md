@@ -16,4 +16,5 @@ mirrorX :: Punkt -> Punkt
 mirrorX (Punkt x y) = Punkt (-x) y
 ```
 
+[[PREV]](/haskell/Kontrollstrukturen) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Patterns-Functor)
 

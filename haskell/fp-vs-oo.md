@@ -48,4 +48,4 @@ All diese Werte kann eine Methode heranziehen und sogar verändern. D.h. neben d
   
 Überraschenderweise ja. Man muss nur genauer hinsehen.
 
-[NEXT](/haskell/Funktionen)
+[[TOP]](/haskell/Preface) [[NEXT]](/haskell/Funktionen)

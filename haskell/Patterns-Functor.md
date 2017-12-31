@@ -119,3 +119,4 @@ Die Infix-Variante von fmap ist besonders interessant, weil sie folgende Schreib
 upperHelloWorld' = toUpper <$> helloWorld
 ```
 
+[[PREV]](/haskell/Patterns) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Patterns-Applicative)

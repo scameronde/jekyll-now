@@ -85,4 +85,4 @@ add5 = add 5
 twelve = add5 7
 ```
 
-[PREV](/haskell/Datentypen) [NEXT](/haskell/Komposition-Funktionen)
+[[PREV]](/haskell/Datentypen) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Komposition-Funktionen)
