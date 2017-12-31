@@ -60,11 +60,11 @@ maybeMap' f Nothing = Nothing
 maybeMap' f (Just x) = Just (f x)
 ```
 
-Nachdem wir das für so ziemlich alles, was man in einem `Maybe´ verpacken kann, verallgemeinert haben, können wir uns die Frage stellen, ob das auch für andere Datentypen außer `Maybe` interessant sein könnte.
+Nachdem wir das für so ziemlich alles, was man in einem `Maybe` verpacken kann, verallgemeinert haben, können wir uns die Frage stellen, ob das auch für andere Datentypen außer `Maybe` interessant sein könnte.
 
 Die Antwort ist Ja, auch wenn die nächsten Beispiele vielleicht nicht auf den ersten Blick passen.
 
-Nehmen wir eine Liste von Integern. Wir wollen jeden Integer auf 'even' testen. Das Ergebnis soll eine Liste von Bool sein. Wir müssten jetzt in unserer zu schreibenden Funktion über die Liste der Ints iterieren und dabei eine Ergebnisliste erstellen, oder wir schaffen uns eine Funktion, die das generalisiert. Versuchen wir es doch mal:
+Nehmen wir eine Liste von Integern. Wir wollen jeden Integer auf `even` testen. Das Ergebnis soll eine Liste von Bool sein. Wir müssten jetzt in unserer zu schreibenden Funktion über die Liste der Ints iterieren und dabei eine Ergebnisliste erstellen, oder wir schaffen uns eine Funktion, die das generalisiert. Versuchen wir es doch mal:
  
 ```haskell
 listMap :: (a -> b) -> [a] -> [b]
