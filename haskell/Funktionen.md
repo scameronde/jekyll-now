@@ -39,7 +39,7 @@ idS :: String -> String
 idS v = v
 ```
 
-Allerdings kann man sich die Arbeit sparen, in dem man generische Funktionen schreibt. Hier ist der Ein- und Ausgabetyp durch einen nicht näher spezifizierten Platzhalter 'a' ersetzt. So wie hier definiert, funktioniert die Funktion 'idA' mit jedem Typ. Sie garantiert aber, dass der Ausgabetyp mit dem Eingabetyp identisch ist. Natürlich gibt es Möglichkeiten die Eigenschaften des generischen Platzhalters näher zu beschreiben. Das aber später.
+Man sich die Arbeit aber auch sparen, in dem man generische Funktionen schreibt. Hier ist der Ein- und Ausgabetyp durch einen nicht näher spezifizierten Platzhalter 'a' ersetzt. So wie hier definiert, funktioniert die Funktion 'idA' mit jedem Typ. Sie garantiert aber, dass der Ausgabetyp mit dem Eingabetyp identisch ist. Natürlich gibt es Möglichkeiten die Eigenschaften des generischen Platzhalters näher zu beschreiben. Das aber später.
 
 ```haskell
 idA :: a -> a
