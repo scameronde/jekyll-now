@@ -1,4 +1,5 @@
 ---
+layout: page
 published: true
 ---
 ## Funktionale Programmierung mit Haskell (und manchmal auch Elm)
@@ -21,7 +22,7 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
 1. [Patterns](/haskell/Patterns)
     1. [Functor](/haskell/Patterns-Functor)
     1. [Applicative](/haskell/Patterns-Applicative)
-    1. Monad
+    1. [Monad](/haskell/Patterns-Monad)
     1. Traversable
     1. [Record und Lens](/haskell/Records-Lenses)
     1. Monad Transformers

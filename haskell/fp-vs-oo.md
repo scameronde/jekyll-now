@@ -1,4 +1,5 @@
 ---
+layout: page
 published: true
 ---
 ## Was unterscheidet funktionale von objektorientierter Programmierung?
