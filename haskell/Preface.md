@@ -33,3 +33,6 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
     1. Ein-/Ausgabe
     1. Variablen
     1. Concurrency
+1. deriving
+1. Type Aliase und newtype
+
