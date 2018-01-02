@@ -23,6 +23,8 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
     1. [Functor](/haskell/Patterns-Functor)
     1. [Applicative](/haskell/Patterns-Applicative)
     1. [Monad](/haskell/Patterns-Monad)
+    1. [Komposition bei Functor, Applicative und Monad](/haskell/Komposition-Patterns)
+    1. [Do Notation bei Monaden](/haskell/Patterns-Do)
     1. Traversable
     1. [Record und Lens](/haskell/Records-Lenses)
     1. Monad Transformers
