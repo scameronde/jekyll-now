@@ -2,9 +2,9 @@
 layout: page
 published: true
 ---
-## Funktionale Programmierung mit Haskell (und manchmal auch Elm)
+## Funktionale Programmierung mit Haskell
 
-Ich habe vor (sehen wir mal wie weit ich komme) meine Erkenntnisse über funktionale Programmierung mit Haskell und Elm in einer Reihe von Posts zusammenzufassen. 
+Ich habe vor (sehen wir mal wie weit ich komme) meine Erkenntnisse über funktionale Programmierung mit Haskell in einer Reihe von Posts zusammenzufassen. 
 
 Dabei sind mir zwei Dinge wichtig:
 
