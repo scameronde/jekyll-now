@@ -106,4 +106,6 @@ do
 
 Jetzt sieht das ganze fast aus wie imperative Programmierung. Allerdings sollte man sich davon nicht beirren lassen. `realGetX p` und `realGetY p` können weiterhin unabhängig voneinander und sogar parallel ausgewertet werden.
 
+STOP! STOP! STOP! Wieso "unabhängig" und "parallel"? Da stehen doch Statements untereinander. Das heißt sie werden nacheinander ausgeführt! Dem ist in Haskell nicht so. Und weil das ganze extrem wichtig ist, hat es ein eigenes Kapitel verdient ([lazy evaluation](/haskell/Lazy)).
+
 [[PREV]](/haskell/Komposition-Patterns) [[TOP]](/haskell/Preface)

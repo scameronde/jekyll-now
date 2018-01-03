@@ -29,6 +29,7 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
     1. [Record und Lens](/haskell/Records-Lenses)
     1. Monad Transformers
     1. Effects
+1. [Haskell und Lazy Evaluation](/haskell/Lazy)
 1. Seiteneffekte
     1. Ein-/Ausgabe
     1. Variablen
