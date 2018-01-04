@@ -42,5 +42,5 @@ oddLengthOfBool True
 
 Warum ist das wichtig? Weil funktionale Programmierung nichts anderes ist, als die Komposition von Funktionen. 
   
-[[PREV]](/haskell/Funktionen-als-Werte) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Kontrollstrukturen)
+[[PREV]](/haskell/Funktionen-als-Werte) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Patterns)
 

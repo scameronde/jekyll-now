@@ -54,5 +54,5 @@ Das alles kann nur funktionieren, weil Haskell faul ohne Ende ist. Haskell berec
 
 Bei einer strikten Evaluierung müssten wir entweder eine sinnvolle Obergrenze für `infinite` abschätzen, oder algorithmisch ganz anders vorgehen. Bei beidem würde die Ausdrucksstärke und Verständlichkeit leiden.
 
-[[TOP]](/haskell/Preface)
+[[PREV]](/haskell/Patterns-Do) [[TOP]](/haskell/Preface)
 

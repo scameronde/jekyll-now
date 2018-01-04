@@ -18,22 +18,26 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
 1. [Datentypen / Mengen](/haskell/Datentypen)
 1. [Funktionen als Werte](/haskell/Funktionen-als-Werte)
 1. [Komposition von Funktionen](/haskell/Komposition-Funktionen)
-1. Kontrollstrukturen
-1. [Patterns](/haskell/Patterns)
+1. [Patterns Teil 1](/haskell/Patterns)
     1. [Functor](/haskell/Patterns-Functor)
     1. [Applicative](/haskell/Patterns-Applicative)
     1. [Monad](/haskell/Patterns-Monad)
     1. [Komposition bei Functor, Applicative und Monad](/haskell/Komposition-Patterns)
     1. [Do Notation bei Monaden](/haskell/Patterns-Do)
-    1. Traversable
-    1. [Record und Lens](/haskell/Records-Lenses)
-    1. Monad Transformers
-    1. Effects
 1. [Haskell und Lazy Evaluation](/haskell/Lazy)
 1. Seiteneffekte
     1. Ein-/Ausgabe
     1. Variablen
     1. Concurrency
-1. deriving
-1. Type Aliase und newtype
+1. Kontrollstrukturen
+1. Patterns Teil 2
+    1. [Record und Lens](/haskell/Records-Lenses)
+    1. Traversable
+    1. Monad Transformers
+    1. Freie Monaden
+    1. Cofunctor
+    1. Comonad
+    1. Effects
+1. `deriving`
+1. `type` und `newtype`
 

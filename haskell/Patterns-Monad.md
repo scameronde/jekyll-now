@@ -51,5 +51,5 @@ maybeMirroredPoint = Just (Punkt 0 3) >>= realMirrorX
 ```
 
 
-[[PREV]](/haskell/Patterns-Applicative) [[TOP]](/haskell/Preface)
+[[PREV]](/haskell/Patterns-Applicative) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Komposition-Patterns)
 

@@ -103,5 +103,5 @@ mp1 >>= (realMirrorX >=> realMirrorY)
 ```
 
 
-[[PREV]](/haskell/Pattern-Monad) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Patterns-Do)
+[[PREV]](/haskell/Patterns-Monad) [[TOP]](/haskell/Preface) [[NEXT]](/haskell/Patterns-Do)
 
