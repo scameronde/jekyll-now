@@ -35,7 +35,6 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
     1. Traversable
     1. Monad Transformers
     1. Freie Monaden
-    1. Cofunctor
     1. Comonad
     1. Effects
 1. `deriving`
