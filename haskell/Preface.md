@@ -26,7 +26,7 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
     1. [Do Notation bei Monaden](/haskell/Patterns-Do)
 1. [Haskell und Lazy Evaluation](/haskell/Lazy)
 1. [Seiteneffekte](/haskell/Seiteneffekte)
-    1. Ein-/Ausgabe
+    1. [Ein-/Ausgabe](/haskell/Seiteneffekte-IO)
     1. Variablen
     1. Concurrency
 1. Kontrollstrukturen
