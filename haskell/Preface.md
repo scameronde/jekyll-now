@@ -32,6 +32,7 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
 1. Kontrollstrukturen
 1. Patterns Teil 2
     1. [Record und Lens](/haskell/Records-Lenses)
+    1. Foldable
     1. Traversable
     1. Monad Transformers
     1. Freie Monaden
