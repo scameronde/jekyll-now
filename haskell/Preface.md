@@ -39,4 +39,5 @@ Das bedeutet, dass ich zugunsten meines Verständnisses erstens nicht immer alle
     1. Effects
 1. `deriving`
 1. `type` und `newtype`
+1. [Verschachtelung von Functor, Applicative und Monad](/haskell/Nesting-Patterns)
 
