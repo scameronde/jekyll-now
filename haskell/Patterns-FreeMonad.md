@@ -126,7 +126,16 @@ instance Functor SimpleIO where
   fmap f (End)        = End
 ```
 
-Jetzt haben wir zwar einen Functor, haben aber ein Problem mit dem Typ von Ketten von 
+Jetzt haben wir zwar einen Functor, haben aber ein Problem mit dem Typ. Schauen wir uns mal die Typen folgender Ausdrücke an:
 
+```haskell
+p1 = Output "Hello" End
+p2 = Output "Hello" (Output "World!" End)
+p3 = Output "Hello" (Output "World!" (Output "von mir" End))
+
+p1 :: SimpleIO (SimpleIO next)
+p2 :: SimpleIO (SimpleIO (SimpleIO next))
+p3 :: SimpleIO (SimpleIO (SimpleIO (SimpleIO next)))
+```
 
 
