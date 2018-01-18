@@ -6,7 +6,7 @@ published: false
 Freie Monaden
 -----------------
 
-Durch die `IO` Monade und anderen Monaden bekommt man schnell den Eindruck, dass Monaden immer irgend etwas tun müssten. Im wildesten Fall sogar etwas mit Seiteneffekten. Aber wieso sollte das so sein? Als allererstes ist eine Monade nichts weiter als ein Datentyp mit ein paar Funktionen und Regeln.
+Durch die `IO` Monade und anderen Monaden bekommt man schnell den Eindruck, dass Monaden immer irgend etwas tun müssten, im wildesten Fall sogar etwas mit Seiteneffekten. Aber wieso sollte das so sein? Als allererstes ist eine Monade nichts weiter als ein Datentyp mit ein paar Funktionen und Regeln.
 
 Rekapitulieren wir doch noch mal, was eine Monade ausmacht.
 
@@ -47,7 +47,11 @@ Aber was soll ich mit so einem Konstrukt? Warum mache ich mir überhaupt die Mü
 
 Als erste einmal ist es gut, Daten und Funktionalität voneinander zu separieren. Dadurch kann ich unterschiedliches Verhalten für ein und die selben Daten abbilden. Das alleine macht aber noch keine Monade notwendig. Interessant sind Monaden, weil sie so schön linear kombinierbar sind. Mit Hilfe einer freien Monade kann man einfach eine DSL abbilden - sogar mit dem Vorteil der `do`-Notation - und den Interpreter der DSL unabhängig von der DSL implementieren.
 
-Nehmen wir als Beispiel eine einfache DSL, die die Ausgabe und Eingabe von Daten erlaubt. Wir geben dann noch einen Interpreter hinzu, und schauen dann, wie weit wir dabei kommen. Wir arbeiten dabei noch ohne Monade:
+Und genau das machen wir jetzt mal. Wir bauen uns eine einfache DSL, die wir mit der `do`-Notation verwenden wollen und schauen dann, wie wir sie in Haskell mit freien Monaden abbilden können.
+
+Unsere DSL soll die Ein- und Ausgabe von Daten erlauben.
+
+Zuerst versuchen wir es mal ganz platt ohne `do`-Notation und Monaden. Wir definieren uns eine Datenstruktur, mit deren Hilfe wir unsere DSL abbilden und einen Interpreter, der die Datenstruktur abarbeitet und 'ausführt'.
 
 ```haskell
 data SimpleIO = Output String SimpleIO
@@ -66,7 +70,7 @@ main :: IO ()
 main = run p1  -- oder: run p2
 ```
 
-Wir haben eine einfache DSL, einen Interpreter (`run`) und können unsere Programme laufen lassen. Die Programme sind zwar noch nicht schön zu schreiben oder zu lesen, aber sie funktionieren schon mal.
+Die Programme sehen zwar nicht schön aus, und sind etwas mühsam zu schreiben, der Interpreter `run` kann sie aber ausführen.
 
 Leider sieht es mit der Kombinierbarkeit der Programme nicht so gut aus. Ich kann weder `p1` mit `p2` verketten, noch `p1` in `p2` aufrufen. Aber dafür ist die Monade ja gut geeignet. 
 
@@ -94,7 +98,9 @@ main = run do
             p2
 ```
 
-Dazu brauchen wir Funktionen, die irgendwie wie folgt aussehen:
+Um es gleich vorneweg zu sagen: das ganze wird eine holprige Reise. Ich werde erst versuchen aus unserem Datentyp `SimpleIO` eine Monade zu machen. Dazu muss sie erst einmal ein Functor sein. Allein damit werde ich bei einer naiven Herangehensweise scheitern. Ich werde in die funktionale Trickkiste greifen müssen, um das Ziel zu erreichen. Der Applicative ist dann relativ einfach. Aus dem Applicative eine Monade zu machen wird mich dann wieder vor Herausforderungen stellen. Wenn wir die alle gemeistert haben, schauen wir mal, wie wir das so verallgemeinern können, dass wir das so nie wieder machen müssen.
+
+Los geht es! Um unsere `do`-Notation abbilden zu können, muss unser Typ `SimpleIO` eine Monade sein, und wir brauchen Funktionen die irgendwie wie folgt aussehen: 
 
 ```haskell
 output :: String -> SimpleIO  -- String ist ein Input-Parameter
@@ -103,6 +109,17 @@ output s = Output s End
 input  :: String -> SimpleIO  -- (String -> SimpleIO) ist eine Funktion die mit der Eingabe aufgerufen wird
 input f = Input f
 ```
+
+HIER KOMMT NEUER TEXT HIN (gleich einen Functor, Applicative und Monad aus SimpleIO machen)
+
+Zuerst machen wir aus SimpleIO einen Functor. Ein Functor muss aber parametrisiert sein.
+
+(Über den Ein-/Ausgabetyp parametrisieren) (warum sollte ich über den next-Typ parametrisieren?)
+
+
+
+
+DAS IST ALT
 
 Und für die `do`-Notation müssen wir die Funktionen `>>` und `>>=` bestimmen (es reicht `return` und `>>=` zu bestimmen, zur Klarstellung unserer Intention definieren wir aber alle Funktionen).
 
@@ -138,4 +155,21 @@ p2 :: SimpleIO (SimpleIO (SimpleIO next))
 p3 :: SimpleIO (SimpleIO (SimpleIO (SimpleIO next)))
 ```
 
+Nicht gut. Das können wir so nicht verwenden. Glücklicherweise ist da eine Regelmäßigkeit drin, die öffter vorkommt. Eine Lösung gibt es dafür auch: den Fixpunkt eines Functors. Und der sieht wie folgt aus:
+
+```haskell
+data Fix f = Fix (f (Fix f))
+```
+
+Wenn wir unseren Datentyp darin einpacken, bekommen wir stabile Typen:
+
+```haskell
+p1 = Fix (Output "Hello" (Fix End))
+p2 = Fix (Output "Hello" (Fix (Output "World!" (Fix End))))
+p3 = Fix (Output "Hello" (Fix (Output "World!" (Fix (Output "von mir" (Fix End))))))
+
+p1 :: Fix SimpleIO
+p2 :: Fix SimpleIO
+p3 :: Fix SimpleIO
+```
 
