@@ -75,7 +75,9 @@ main = run p1  -- oder: run p2
 
 Die Programme sehen zwar nicht schön aus, und sind etwas mühsam zu schreiben, der Interpreter `run` kann sie aber ausführen.
 
-Leider sieht es mit der Kombinierbarkeit der Programme nicht so gut aus. Ich kann weder `p1` mit `p2` verketten, noch `p1` in `p2` aufrufen. Aber dafür ist die Monade ja gut geeignet. 
+Leider sieht es auch mit der Kombinierbarkeit der Programme nicht so gut aus. Ich kann weder `p1` mit `p2` verketten, noch `p1` in `p2` aufrufen. 
+
+Aber für all das ist die Monade ja gut geeignet. 
 
 Erweitern wir unsere DSL zu einer Monade.
 
@@ -103,7 +105,9 @@ main = run do
 
 Um es gleich vorneweg zu sagen: das ganze wird eine holprige Reise. Ich werde erst versuchen aus unserem Datentyp `SimpleIO` eine Monade zu machen. Dazu muss sie erst einmal ein Functor sein. Allein damit werde ich bei einer naiven Herangehensweise scheitern. Ich werde in die funktionale Trickkiste greifen müssen, um das Ziel zu erreichen. Der Applicative ist dann relativ einfach. Aus dem Applicative eine Monade zu machen wird mich dann wieder vor Herausforderungen stellen. Wenn wir die alle gemeistert haben, schauen wir mal, wie wir das so verallgemeinern können, dass wir das so nie wieder machen müssen.
 
-Los geht es! Um unsere `do`-Notation abbilden zu können, muss unser Typ `SimpleIO` eine Monade sein, und wir brauchen Funktionen die irgendwie wie folgt aussehen: 
+Los geht es! 
+
+Um unsere `do`-Notation abbilden zu können, muss unser Typ `SimpleIO` eine Monade sein, und wir brauchen Funktionen die irgendwie wie folgt aussehen: 
 
 ```haskell
 output :: String -> SimpleIO  -- String ist ein Input-Parameter
