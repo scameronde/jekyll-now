@@ -10,19 +10,22 @@ Durch die `IO` Monade und anderen Monaden bekommt man schnell den Eindruck, dass
 
 Rekapitulieren wir doch noch mal, was eine Monade ausmacht.
 
-Als erstes ist eine Monade sowohl ein Functor als auch ein Applicative. D.h. dass folgende Funktionen definiert sein müssen:
+Als erstes ist eine Monade sowohl ein Functor als auch ein Applicative. D.h. dass sie folgende Struktur erfüllen muss:
 
 ```haskell
-fmap  :: (a -> b) -> f a -> f b
+class Functor t where
+  fmap :: (a -> b) -> t a -> t b
 
-pure  :: a -> f a 
-(<*>) :: f (a -> b) -> f a -> f b
+class Functor t => Applicative t where
+  pure  :: a -> t a 
+  <*> :: t (a -> b) -> t a -> t b
 ```
 
-Die Monade bringt dann noch folgende Funktion mit:
+Die Monade bringt dann noch folgende Strukturbedingungen mit:
 
 ```haskell
-(>>=) :: m a -> (a -> m b) -> m b
+class Applicative m => Monad m where
+  (>>=) :: m a -> (a -> m b) -> m b
 ```
 
 Kann ich denn folgenden simplen Datentyp zu einem Functor, Applicative und Monad machen?
