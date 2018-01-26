@@ -217,6 +217,10 @@ class MyModule {
 
 ## Besonderheiten bei der Erzeugung/Initialisierung von Objekten
 
+### Module über Injection
+
+Informationen die in einem Module stehen haben für Dagger immer Vorrang vor den annotierten Informationen.
+
 ### Nullable
 
 Dagger achtet darauf, dass kein Provider `null` zurückliefert bzw. dass keine Dependency (egal über Constructor-, Method- oder Field-Injection) mit `null` belegt wird.
@@ -318,8 +322,240 @@ class MyModule1 {
 
 ## Scopes
 
+Bis jetzt wurden immer neue Instanzen erzeugt, wenn eine der Methoden des oder der Components aufgerufen wurde. Manchmal möchte man aber Singletons haben. Dazu gibt es eine Scope-Annotation `@Singleton`. Je nachdem ob man die Erzeugung per Annotation oder über ein Module macht, muss die Annotation `@Singleton` an einer anderen Stelle stehen.
+
+Wichtig ist, dass die Eigenschaft *Singleton* nur für eine Component-Instanz gilt. Unterschiedliche Instanzen einer Component haben neue Singletons:
+
+```java
+@Component
+@Singleton
+interface MyComponent {
+  ASingleton getASingleton();
+  ANormalObject getANormalObject();
+}
+
+MyComponent component1 = DaggerMyComponent.builder().build();
+MyComponent component2 = DaggerMyComponent.builder().build();
+
+assert(component1.getANormalObject() != component1.getANormalObject());
+assert(component1.getASingleton() == component1.getASingleton());
+assert(component1.getASingleton() != component2.getASingleton());
+```
+
+Wenn man also ein systemweites Singleton haben will, muss man dafür sorgen, dass man immer mit der selben Instanz der Component arbeitet. Später mehr dazu.
+
+Um Singletons zurückgeben zu können, muss die Component entsprechend annotiert werden. Das bedeutet jetzt nicht, dass die Component ausschließlich Singletons zurück gibt, sondern eben auch. Welches Objekt dabei ein Singleton ist und welches nicht, wird an anderer Stelle bestimmt.
+
+
+### Erzeugung per Annotation
+
+Wenn die Erzeugung über einen mit `@Inject` annotierten Konstruktor geschieht, muss man die Klasse mit `@Singleton` annotieren:
+
+```java
+@Singleton
+class ASingleton {
+  @Inject ASingleton() {};
+}
+```
+
+### Erzeugung per Module
+
+Wenn die Erzeugung über ein Modul geschieht, muss die Provider-Methode mit `@Singleton`annotiert werden:
+
+```java
+class MyModule {
+  @Provide
+  @Singleton
+  ASingleton provideASingleton() { ... };
+
+  @Provide
+  ANormalObject provideANormalObject() { ... };
+}
+```
+
+### Eigene Scope-Annotationen
+
+Man kann auch eigene Scope-Annotationen erstellen. Diese haben aber exakt die gleiche Bedeutung wie @Singleton, können aber zur besseren Dokumentation verwendet werden. Warum wird im nächsten Abschnitt deutlich.
+
+```java
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SystemScoped {
+}
+
+
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TenantScoped {
+}
+```
+
+Pro Component kann aber nur eine Annotation verwendet werden. Pro Modul können zwar unterschiedliche Annotationen verwendet werden, diese dürfen aber nicht bei der selben Component in Verwendung kommen.
 
 
 ## Geschachtelte Scopes
 
+Jede halbwegs komplexe Serverapplikation hat mehrere Scopes. Jeder Scope bestimmt die Lebensdauer eines Objekts. Die Scopes sind in der Regel hierarchisch aufgebaut. Hier ein Beispiel:
+
+- @SystemScoped
+  Das Objekt wird vom ganzen System verwendet und lebt so lange der Prozess lebt.
+- @TenantScoped
+  Das Objekt lebt im Kontext eines Tenant/Mandanten und ist nur für diesen gültig. Es lebt und stirbt mit dem Mandant. Ein Tenant-Scoped Objekt kann natürlich alle System-Scoped Objekte verwenden.
+- @SessionScoped
+  Das Objekt lebt im Kontext einer User-Session und lebt und stirbt mit der Session. Ein Session-Scoped Objekt kann alle Tenant-Scoped und System-Scoped Objekte verwenden.
+- @RequestScoped
+  Das Objekt lebt im Kontext eines Server-Aufrufs. Ein Request-Scoped Objekt kann alle Session-Scoped, Tenant-Scoped und System-Scoped Objekte verwenden.
+
+Da jede Applikation anders ist und jede Programminfrastruktur anders ist, unterstütz Dagger solche geschachtelten Scopes mit Objektlebensdauer und Zugriffshierarchie nicht direkt, sondern gibt einem nur die Werkzeuge in die Hand, um leicht selber etwas passendes bauen zu können.
+
+Das Werkzeug der Wahl ist dabei Component-Dependencies. In unserem Beispiel sieht das wie folgt aus:
+
+```java
+@SystemScoped
+@Component
+interface SystemServices {
+}
+
+@TenantScoped
+@Component(dependencies = { SystemServices.class })
+interface TenantServices {
+}
+
+@SessionScoped
+@Component(dependencies = { TenantServices.class })
+interface SessionServices {
+}
+
+@RequestScoped
+@Component(dependencies = { SessionServices.class })
+interface RequestServices {
+}
+```
+
+Die Komponenten werden dann wie folgt erzeugt:
+
+```java
+SystemServices systemServices = DaggerSystemServices.builder().build();
+
+TenantServices tenantServices = DaggerTenantServices.builder().systemServices(systemServices).build();
+
+SessionServices sessionServices = DaggerSessionServices.builder().tenantServices(tenantServices).build();
+
+RequestServices requestServices = DaggerRequestServices.builder().sessionServices(sessionServices).build();
+```
+
+## Kontext des Scopes den Objekten mitgeben
+
+Irgendwie brauchen die Objekte bzw. Services der Scopes passende Kontextinformationen, damit sie z.B. den Reseller oder den User oder die Session-Locale kennen. Dies ist der Scope-Kontext, der fast allen in einem Scope erzeugten Objekten mitgegeben werden muss.
+
+### über die Module
+
+Die einfachste, aber nicht bevorzugte Methode, ist die über Module. Man gibt dem Modul einfach den Kontext als Fields mit:
+
+```java
+@Module
+class TenantContextModule {
+  TenantId tenantId;
+
+  TenantContextModule(TenantId tenantId) { ... };
+
+  @Provide
+  @TenantScoped
+  ATenantScopedObject provideATenantScopedObject(ADependency aDependency) {
+    return new ATenantScopedObject(this.tenantId, aDependency);
+  }
+}
+
+@Component(modules = { TenantContextModule.class }, dependencies = { SystemServices.class })
+@TenantScoped
+interface TenantServices {
+  ATenantScopedObject getATenantScopedObject();
+} 
+```
+
+Allerdings muss die Component dann anders erzeugt werden, da sie das Modul nicht selbst erzeugen kann:
+
+```java
+TenantServices ts = DaggerTenantServices.builder().systemServices(systemServices)
+                                                  .tenantContextModule(new TenantContextModule(aTenantId))
+                                                  .build();
+```
+
+
+### über die Component
+
+Der von Dagger bevorzugte Weg geht direkt über die Component. Dazu muss man zwar der Component einen eigenen Builder verpassen, das hat aber den Vorteil, dass der Kontext wie jedes andere Objekt injected werden kann und so auch von per Annotation erzeugten Objekten verwendet werden kann.
+
+```java
+@Module
+class TenantContextModule {
+  @Provide
+  @TenantScoped
+  ATenantScopedObject provideATenantScopedObject(TenantId tenantId, ADependency aDependency) {
+    return new ATenantScopedObject(this.tenantId, aDependency);
+  }
+}
+
+
+@Component(modules = { TenantContextModule.class }, dependencies = { SystemServices.class })
+@TenantScoped
+interface TenantServices {
+  ATenantScopedObject getATenantScopedObject();
+
+  @Component.Builder
+  interface Builder {
+    @BindsInstance Builder tenantId(TenantId tenantId);
+    TenantServices build();
+  }
+} 
+```
+
+Dagger generiert dann allen notwendigen Code, damit die Component wie folgt erzeugt werden kann:
+
+```java
+TenantServices ts = DaggerTenantServices.builder().systemServices(systemServices)
+                                                  .tenantId(aTenantId)
+                                                  .build();
+```
+
+
+## Instanzen von Components entsprechend des Lebenszykluses speichern
+
+Wenn die gewählte Server- oder Programmstruktur keinen nativen Ort für die erzeugten Component-Instanzen bietet, müssen wir diese selber speichern. Eine Möglichkeit dafür ist das Locator-Pattern:
+
+```java
+
+public final class SystemServicesLocator {
+  private static final SystemServices systemServices = DaggerSystemServices.builder().build();
+
+  public static SystemServices get() {
+    return systemServices;
+  }
+}
+
+```
+
+Alle kontextbehafteten Instanzen können in einer Map abgelegt werden, die von der jeweils höheren Instanz geliefert wird:
+ 
+```java
+
+@Singleton
+public final class TenantServicesLocator {
+  private final Map<TenantId, TenantServices> services = new ConcurrentHashMap<>();
+  
+  SystemServices systemServices;
+  
+  public TenantServices get(TenantId id) {
+    return services.computIfAbsent(id, tenantId -> DaggerTenantServices.builder()
+                                                                       .systemServices(systemServices)
+                                                                       .tenantId(tenantId)
+                                                                       .build());
+  }
+
+  public void drop(TenandId id) {
+    services.remove(id);
+  }
+}
+
+```
 
