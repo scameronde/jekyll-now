@@ -203,7 +203,7 @@ class C {
 
 ### explizit über Module
 
-Aktuell weiß ich nur, dass man über Module Erzeugung **plus** Initialisierung abbilden kann. Eine reine Initialisierung, für den Fall dass das Objekt anderweitig erzeugt wurde, ist meines Wissens nach nich möglich.
+Mit der aktuellen Version von Dagger-2 kann über Module Initialisierung nur gemeinsam mit Erzeugung abgebildet werden. Laut der Dagger-2 Entwickler bestehen auch keine Pläne dies zukünftig zu ändern.
 
 ```java
 @Module
@@ -212,7 +212,33 @@ class MyModule {
   C provideC(A a, B b) {
     return new MyC(a, b);
   }
+} 
+```
+
+Wenn man bereits bestehende Objekte durch Dagger initialisieren lassen möchte, kann man folgendes Pattern verwenden:
+
+```java
+public interface Injector<T> {
+  T inject(T instance);
 }
+
+@Module
+class MyModule {
+  @Provides
+  Injector<C> provideCInjector(A a, B b) {
+    return instance -> {
+      instance.setAll(a, b);
+      return instance;
+    };
+  }
+}
+
+@Component
+interface MyComponent {
+  Injector<C> getCInjector();
+}
+
+component.getCInjector().inject(c);
 ```
 
 ## Besonderheiten bei der Erzeugung/Initialisierung von Objekten
@@ -559,3 +585,6 @@ public final class TenantServicesLocator {
 
 ```
 
+## Pladoyer für Constructor- und Method-Injection
+
+Constructor- und Method-Injection haben den Vorteil, dass Objekte auch ohne Dagger erzeugt und initialisert werden können. Ganz im Gegensatz zu Attribute-Injection, die entweder generierten Code oder Reflection benötigt. Besonders beim Schreiben von Tests wird man dankbar sein, nicht für jedes Mock einen neuen Dagger-Context schreiben zu müssen.
