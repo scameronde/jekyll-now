@@ -380,13 +380,13 @@ Man kann auch eigene Scope-Annotationen erstellen. Diese haben aber exakt die gl
 ```java
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SystemScoped {
+public @interface SystemSingleton {
 }
 
 
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TenantScoped {
+public @interface TenantSingleton {
 }
 ```
 
@@ -397,13 +397,13 @@ Pro Component kann aber nur eine Annotation verwendet werden. Pro Modul können 
 
 Jede halbwegs komplexe Serverapplikation hat mehrere Scopes. Jeder Scope bestimmt die Lebensdauer eines Objekts. Die Scopes sind in der Regel hierarchisch aufgebaut. Hier ein Beispiel:
 
-- @SystemScoped
+- @SystemSingleton
   Das Objekt wird vom ganzen System verwendet und lebt so lange der Prozess lebt.
-- @TenantScoped
+- @TenantSingleton
   Das Objekt lebt im Kontext eines Tenant/Mandanten und ist nur für diesen gültig. Es lebt und stirbt mit dem Mandant. Ein Tenant-Scoped Objekt kann natürlich alle System-Scoped Objekte verwenden.
-- @SessionScoped
+- @SessionSingleton
   Das Objekt lebt im Kontext einer User-Session und lebt und stirbt mit der Session. Ein Session-Scoped Objekt kann alle Tenant-Scoped und System-Scoped Objekte verwenden.
-- @RequestScoped
+- @RequestSingleton
   Das Objekt lebt im Kontext eines Server-Aufrufs. Ein Request-Scoped Objekt kann alle Session-Scoped, Tenant-Scoped und System-Scoped Objekte verwenden.
 
 Da jede Applikation anders ist und jede Programminfrastruktur anders ist, unterstütz Dagger solche geschachtelten Scopes mit Objektlebensdauer und Zugriffshierarchie nicht direkt, sondern gibt einem nur die Werkzeuge in die Hand, um leicht selber etwas passendes bauen zu können.
@@ -411,22 +411,22 @@ Da jede Applikation anders ist und jede Programminfrastruktur anders ist, unters
 Das Werkzeug der Wahl ist dabei Component-Dependencies. In unserem Beispiel sieht das wie folgt aus:
 
 ```java
-@SystemScoped
+@SystemSingleton
 @Component
 interface SystemServices {
 }
 
-@TenantScoped
+@TenantSingleton
 @Component(dependencies = { SystemServices.class })
 interface TenantServices {
 }
 
-@SessionScoped
+@SessionSingleton
 @Component(dependencies = { TenantServices.class })
 interface SessionServices {
 }
 
-@RequestScoped
+@RequestSingleton
 @Component(dependencies = { SessionServices.class })
 interface RequestServices {
 }
@@ -460,16 +460,16 @@ class TenantContextModule {
   TenantContextModule(TenantId tenantId) { ... };
 
   @Provide
-  @TenantScoped
-  ATenantScopedObject provideATenantScopedObject(ADependency aDependency) {
-    return new ATenantScopedObject(this.tenantId, aDependency);
+  @TenantSingleton
+  ATenantSingletonObject provideATenantSingletonObject(ADependency aDependency) {
+    return new ATenantSingletonObject(this.tenantId, aDependency);
   }
 }
 
 @Component(modules = { TenantContextModule.class }, dependencies = { SystemServices.class })
-@TenantScoped
+@TenantSingleton
 interface TenantServices {
-  ATenantScopedObject getATenantScopedObject();
+  ATenantSingletonObject getATenantSingletonObject();
 } 
 ```
 
@@ -490,17 +490,17 @@ Der von Dagger bevorzugte Weg geht direkt über die Component. Dazu muss man zwa
 @Module
 class TenantContextModule {
   @Provide
-  @TenantScoped
-  ATenantScopedObject provideATenantScopedObject(TenantId tenantId, ADependency aDependency) {
-    return new ATenantScopedObject(this.tenantId, aDependency);
+  @TenantSingleton
+  ATenantSingletonObject provideATenantSingletonObject(TenantId tenantId, ADependency aDependency) {
+    return new ATenantSingletonObject(this.tenantId, aDependency);
   }
 }
 
 
 @Component(modules = { TenantContextModule.class }, dependencies = { SystemServices.class })
-@TenantScoped
+@TenantSingleton
 interface TenantServices {
-  ATenantScopedObject getATenantScopedObject();
+  ATenantSingletonObject getATenantSingletonObject();
 
   @Component.Builder
   interface Builder {
@@ -510,7 +510,7 @@ interface TenantServices {
 } 
 ```
 
-Dagger generiert dann allen notwendigen Code, damit die Component wie folgt erzeugt werden kann:
+Dagger generiert dann den notwendigen Code, damit die Component wie folgt erzeugt werden kann:
 
 ```java
 TenantServices ts = DaggerTenantServices.builder().systemServices(systemServices)
