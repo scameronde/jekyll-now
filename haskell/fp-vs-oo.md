@@ -4,7 +4,7 @@ published: true
 ---
 ## Was unterscheidet funktionale von objektorientierter Programmierung?
 
-Bei der funktionalen Programmierung steht die Funktion im Mittelpunkt. Es gibt keine Prozeduren, keine Objekte und dementsprechend keine Methoden.
+Bei der funktionalen Programmierung steht die Funktion und die Datenmengen auf denen sie definiert ist im Mittelpunkt. Es gibt keine Prozeduren, keine Objekte und dementsprechend keine Methoden.
   
 Eine Funktion ist eine Abbildung von einem Eingabewert auf einen Ausgabewert.
 EIN Eingabewert, EIN Ausgabewert. 
@@ -17,7 +17,7 @@ Folgendes - mit Prozeduren und Methoden problemlos machbares - geht mit Funktion
 - keinen Ausgabewert zurückliefern
 - mehrere Ausgabewerte zurückliefern
 - Exceptions werfen
-- Seiteneffekte auslösen (die Welt außerhalb der Funktion verändern)
+- andere Seiteneffekte auslösen (die Welt außerhalb der Funktion verändern)
   
 Funktionen sind also echte, pure Abbildungen. Ein Wert geht rein und ein Wert kommt raus. Das ist alles.
   
@@ -25,7 +25,8 @@ Das hat eine ganze Menge Vorteile:
 - Funktionen sind einfach zu testen
 - Funktionen sind einfach zu verstehen
 - Funktionen sind einfach zu ändern
-- Funktionen lassen sich einfach verketten und wieder lösen. Es passiert nichts unerwartetes.
+- Funktionen lassen sich einfach verketten. 
+- Es passiert nichts unerwartetes.
     
 Der vielleicht stärkste Vorteil gegenüber klassischer imperativer Programmierung ist:
 - Ein Programm besteht aus einer Reihe verketter Funktionen
@@ -42,7 +43,7 @@ Schauen wir uns doch einmal eine Methode eines objektorientierten Programms an. 
 - statischen Attribute ihrer Klasse
 - öffentliche statische Attribute aller öffentlichen Klassen (global)
     
-All diese Werte kann eine Methode heranziehen und sogar verändern. D.h. neben der etwaigen Berechnung eines Rückgabewerts, kann eine Methode große Teile des Datenraums eines Programms verändern. D.h. der Datenfluss und der Kontrollfluss haben nur wenig miteinander zu tun. Die Komplexität ist eine Dimension größer. Was bei kleinen Programmen noch halbwegs intellektuell handhabbar ist, bereitet bei großen Programmen zunehmend Probleme. Diese versuchen wir durch clevere Abstraktionen, Einschränkung der Sichtbarkeiten, Modularisierung, etc. irgendwie zu bändigen. In der Regel gelingt dies aber nur unter hohem Aufwand und mehr schlecht als recht.
+All diese Werte kann eine Methode heranziehen und verändern. D.h. neben der etwaigen Berechnung eines Rückgabewerts, kann eine Methode große Teile des Datenraums eines Programms verändern. D.h. der Datenfluss und der Kontrollfluss haben nur wenig miteinander zu tun. Was bei kleinen Programmen noch halbwegs intellektuell handhabbar ist, bereitet bei großen Programmen zunehmend Probleme. Diese versuchen wir durch clevere Abstraktionen, Einschränkung der Sichtbarkeiten, Modularisierung, etc. irgendwie zu bändigen. In der Regel gelingt dies aber nur unter hohem Aufwand und mit zweifelhaftem Ergebnis. Schnell passiert es, dass der angesehenste Programmierer im Team nicht der ist, der den besten Code schreibt, sondern der sich am besten in dem vorhandenen auskennt und damit zu leben weiß.
   
   
 ## Aber kann man denn mit so wenig effektiv arbeiten?

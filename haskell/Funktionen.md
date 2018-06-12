@@ -16,11 +16,13 @@ f s = length s
 Funktionsaufruf
 ------------------
   
-Eine Funktion wird einfach wie folgt aufgerufen. Eine Klammer um den Parameter ist weder notwendig noch üblich.
+Eine Funktion wird einfach wie folgt aufgerufen:
 
 ```haskell
 y = f "Hello World!"
-```      
+```
+
+Eine Klammer um den Parameter ist weder notwendig noch üblich.
 
 
 Generische Funktionsdefinition
