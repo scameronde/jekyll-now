@@ -307,7 +307,210 @@ A a = root.getA();
 
 ## Working with more than one implementation
 
+In **Working with interfaces** we had an interface with two implementations, but used only one for the object graph. But what if we want to use both implementations in different contexts? How do we distinguish both?
+
+<img src="../InterfaceImplementation2.svg"/>
+
+The Java standard for injection uses `@Qualifyer` for this use-case. We will now see how that works in Dagger-2.
+
+First we have do define two qualifyers:
+
+```java
+@Qualifier
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface One {
+}
+
+@Qualifier
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Two {
+}
+```
+
+Our module and component should look like that:
+
+```java
+@Module
+class RootModule {
+  @Provides
+  @One
+  B provideBImpl1(BImpl1 impl) {
+    return impl;
+  }
+
+  @Provides
+  @Two
+  B provideBImpl2(BImpl2 impl) {
+    return impl;
+  }
+}
+
+@Component(modules = { RootModule.class } )
+interface Root {
+  A1 getA1();
+  A2 getA2();
+}
+```
+
+And our classes `A1` and `A2` should look like that:
+
+```java
+class A1 {
+  B b;
+
+  @Inject
+  public A1 (@One B b) {
+    this.b = b;
+  }
+}
+
+class A2 {
+  B b;
+
+  @Inject
+  public A2 (@Two B b) {
+    this.b = b;
+  }
+}
+```
+
+More realistically we do not want our constructor parameters to be littered with annotations. Most of the time we do not know which implementation of B we should use at the time of coding `A1` and `A2`. Therefore we should do it like this:
+
+```java
+class A1 {
+  B b;
+
+  public A1 (B b) {
+    this.b = b;
+  }
+}
+
+class A2 {
+  B b;
+
+  public A2 (B b) {
+    this.b = b;
+  }
+}
+
+@Module
+class RootModule {
+  @Provides
+  @One
+  B provideBImpl1(BImpl1 impl) {
+    return impl;
+  }
+
+  @Provides
+  @Two
+  B provideBImpl2(BImpl2 impl) {
+    return impl;
+  }
+
+  @Provides
+  A1 provideA1(@One B b) {
+    return new A1(b);
+  }
+
+  @Provides
+  A2 provideA1(@Two B b) {
+    return new A2(b);
+  }
+}
+```
+
 ## Working with scopes
+
+When calling a method on a component, each time a new instance of the requested object tree is created.
+
+```java
+A a1 = root.getA();
+A a2 = root.getA();
+assert (a1 != a2)
+assert (a1.b != a2.b)
+assert (a1.b.c != a2.b.c)
+```
+
+But what do we do if `C` for example is a stateful service that should be shared by all instances of `A`?
+
+This is when `@Scope` comes into play. When a class that is instantiated in a Dagger-2 component has a scoped annotation, Dagger-2 creates exactly one instance of the class returned by that function for each component instance. Alternatively, one can create and annotate a `@Provides` method. Let's do some examples:
+
+First, we create our scope:
+
+```java
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Scope1 {
+}
+```
+
+Now we can either annotate the class:
+
+```java
+@Scope1
+class C {
+  @Inject
+  public C() {
+  }
+}
+```
+
+Or we can annotate a `@Provides` method:
+
+```java
+@Module
+class RootModule {
+  @Provides
+  @Scope1
+  C getC() {
+    return new C();
+  }
+}
+
+@Component( modules = { RoootModule.class } )
+@Scope1
+interface Root {
+  A getA();
+}
+```
+
+Now the following is true:
+
+```java
+A a1 = root.getA();
+A a2 = root.getA();
+assert (a1 != a2)
+assert (a1.b != a2.b)
+assert (a1.b.c == a2.b.c)  // changed from != to ==
+```
+
+The component creates only one instance of class `C` because it is annotated by a `@Scope` annotation.
+
+Please notice, that this behavior is local to an instance of a component. Each component instance handles its own instances:
+
+```java
+Root root1 = DaggerRoot.create();
+Root root2 = DaggerRoot.create();
+A a1 = root1.getA();
+A a2 = root2.getA();
+assert (a1 != a2)
+assert (a1.b != a2.b)
+assert (a1.b.c != a2.b.c)  // changed back to ==
+```
+
+One last thing: the component interface has to be annotated by the scope, too.
+
+```java
+@Component( modules = { RoootModule.class } )
+@Scope1
+interface Root {
+  A getA();
+}
+```
+
+This is because of an important concept of Dagger-2: a component can only work with one scope. The scope a component works with must be annotated at the component interface. Every module a component works with can only provide objects without a scope or with the scope the component works with. Everything else results in a compiler error.
 
 ## Working with a hierarchy of scopes
 
