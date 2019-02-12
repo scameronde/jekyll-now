@@ -1,9 +1,8 @@
 ---
 layout: page
 published: true
+title: Functional Prgramming with Elm
 ---
-## Functional programming with Elm
-
 Here are my slides for the "Karlsruher Entwicklertag 2017".
 
 
