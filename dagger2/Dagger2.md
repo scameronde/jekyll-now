@@ -35,7 +35,7 @@ Dagger-2 adds three more concepts:
 
 Let's start with a simple object tree.
 
-<svg src="SimpleObjectGraph.svg"></svg>
+<svg src="../SimpleObjectGraph.svg"></svg>
 
 With Dagger-2 you can use three types of dependency injection:
 
