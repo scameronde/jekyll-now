@@ -469,7 +469,7 @@ class RootModule {
   }
 }
 
-@Component( modules = { RoootModule.class } )
+@Component( modules = { RootModule.class } )
 @Scope1
 interface Root {
   A getA();
@@ -503,7 +503,7 @@ assert (a1.b.c != a2.b.c)  // changed back to ==
 One last thing: the component interface has to be annotated by the scope, too.
 
 ```java
-@Component( modules = { RoootModule.class } )
+@Component( modules = { RootModule.class } )
 @Scope1
 interface Root {
   A getA();
@@ -514,3 +514,115 @@ This is because of an important concept of Dagger-2: a component can only work w
 
 ## Working with a hierarchy of scopes
 
+A business application typically has more than one scope for objects. Possible scopes could be **system** (one instance per running process), **tenant** (one instance per registered tenant) and **session** (one instance per user session). These scopes also have a hierarchy: objects living in the session scope have a shorter live than objects living in the system scope. In our example the hierarchy would be **system->tenant->session**
+
+How can we provide different, hierarchical scopes if a Dagger-2 component can only handle one scope?
+
+The answer is easy: we have to work with hierarchically organized components. It is time to introduce `@Subcomponent`.
+
+The term **subcomponent** might be misleading. **Sub** is not meant like 'part of something larger' but more like 'subclass'. A subcomponent inherits all information from its parent component and adds more information to it. In addition, a subcomponent must have a different scope than that of its parent. The scope of the subcomponent is also smaller than that of its parent. Confusing? An example will bring some clarity.
+
+These are our scopes:
+
+```java
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SystemScope {
+}
+
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TenantScope {
+}
+
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SessionScope {
+}
+```
+
+Our (sub)components have to look like that:
+
+```java
+@Component( modules = { SystemModule.class } )
+@SystemScope
+interface SystemScopedServices {
+  ASystemScopedService getASystemScopedService();
+  TenantScopedServices getTenantScopedServices(TenantModule module);
+}
+
+@Subcomponent( modules = { TenantModule.class } )
+@TenantScope
+interface TenantScopedServices {
+  ATenantScopedService getATenantScopedService();
+  SessionScopedServices getSessionScopedServices(SessionModule module);
+}
+
+@Subcomponent( modules = { SessionModule.class } )
+@SessionScope
+interface SessionScopedServices {
+  ASessionScopedService getASessionScopedService();
+}
+```
+
+with their corresponding modules looking like this:
+
+```java
+@Module
+public class SystemModule {
+  public SystemModule() {
+  }
+
+  @Provides
+  @SystemScope
+  public ASystemScopedService provideService() {
+    return new SystemScopedService();
+  }
+}
+
+@Module
+public class TenantModule {
+  private final Tenant tenant;
+
+  public TenantModule(Integer tenantId) {
+    this.tenant = new Tenant(tenantId);
+  }
+
+  @Provides
+  @TenantScope
+  Tenant provideTenant() {
+    return this.tenant;
+  }
+
+  @Provides
+  @TenantScope
+  public ATenantScopedService provideService(Tenant tenant) {
+    return new TenantScopedService(tenant);
+  }
+}
+
+@Module
+public class SessionModule {
+  private final Session session;
+
+  public SessionModule(Integer sessionId) {
+    this.session = new Session(sessionId);
+  }
+
+  @Provides
+  @SessionScope
+  Session provideSession() {
+    return this.session;
+  }
+
+  @Provides
+  @SessionScope
+  public ASessionScopedService provideService(Session session) {
+    return new SessionScopedService(session);
+  }
+}
+```
+
+The only component is the `SystemScopedServices` component. The other two are subcomponents. The hierarchy of components is declared by the functions that return the subcomponents (`TenantScopedServices` and `SessionScopedServices` respectively).
+
+You must be aware, that every call to `SystemScopedServices#getTenantScopedServices(...)` and `TenantScopedServices#getSessionScopedServices(...)` will return a new Instance of the corresponding subcomponent. The same way you are responsible to keep and provide a system-wide singleton of the `SessionScopedServices` you are responsible to keep, provide and destroy the `TenantScopedServices` and `SessionScopedServices`.
