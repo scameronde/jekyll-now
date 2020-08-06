@@ -6,13 +6,13 @@ title: An introduction to dependency injection with Dagger-2
 
 Why bother looking at a dependency injection framework for Java when you can use Spring or the standard implementation of your application server? Because it does something notably different: it is a compile-time dependency injection framework.
 
-What does that mean? Spring and many other DI frameworks operate while your program is running. Their knowledge about the object tree that has to be built is constructed at runtime. They scan the classpath for annotated classes, read and parse configuration files and add information you provided by using the API of your framework of choice. Consequently, while building the object graph, they create and inject dependencies using reflection. The advantages of this modus operandi are the same as with dynamic typing: you have great flexibility and very low overhead while you are programming. Unfortunately, the disadvantages are also the same: it all falls apart if you did something wrong. The program crashes if a dependency cannot be satisfied. Also, static code analysis is nearly impossible. What is missing? What is superfluous and can be deleted? What depends on what?
+What does that mean? Spring and many other DI frameworks operate while your program is running. Their knowledge about the object tree, that has to be built, is constructed at runtime. They scan the classpath for annotated classes, read and parse configuration files and add information you provided by using the API of your framework of choice. Consequently, while building the object graph, they create and inject dependencies using reflection. The advantages of this modus operandi are the same as with dynamic typing: you have great flexibility and very low overhead while you are programming. Unfortunately, the disadvantages are also the same: it all falls apart if you did something wrong. The program crashes at runtime if a dependency cannot be satisfied. Also, static code analysis is nearly impossible. What is missing? What is superfluous and can be deleted? What depends on what?
 
 The answer to these problems is the same as with typing: ditching dynamic for static.
 
-Dagger-2 does all that other DI frameworks are doing but at compile time. It scans the codebase for information about the object graph and checks if all dependencies can be satisfied without any ambiguities. If this is not the case, compiling fails. If everything is fine, Dagger-2 generates source code that builds the object graph at runtime.
+Dagger-2 does all that what other DI frameworks are doing but at compile time. It scans the codebase for information about the object graph and checks if all dependencies can be satisfied without any ambiguities. If this is not the case, compiling fails. If everything is fine, Dagger-2 generates source code that builds the object graph at runtime.
 
-Besides the obvious advantage of having the guaranty that dependency injection will not fail at runtime, there are more benefits to the static approach: object tree creating is faster because no reflection is used and static code analysis tools can do their job.
+Besides the obvious advantage of having the guaranty that dependency injection will not fail at runtime, there are more benefits to the static approach: creating an object tree is faster because no reflection is used and static code analysis tools can do their job.
 
 But how does it all work?
 
@@ -24,6 +24,7 @@ Dependency injection for Java uses some standardized concepts, represented by an
 - @Scope
 - @Qualifyer
   
+
 Dagger-2 adds three more concepts:
 
 - @Component
@@ -161,7 +162,7 @@ a = root.inject(a);
 
 ## Working with interfaces
 
-Object graphs made out of simple classes are fine and dandy, but many times we have to work with services that are defined by an interface and realized by one or more implementations. Again we are working with a simple example:
+Object graphs made out of simple classes are fine, but many times we have to work with services that are defined by an interface and realized by one or more implementations. Again we are working with a simple example:
 
 <img src="../InterfaceImplementation.svg"/>
 
@@ -435,7 +436,7 @@ assert (a1.b.c != a2.b.c)
 
 But what do we do if `C` for example is a stateful service that should be shared by all instances of `A`?
 
-This is when `@Scope` comes into play. When a class that is instantiated in a Dagger-2 component has a scoped annotation, Dagger-2 creates exactly one instance of the class returned by that function for each component instance. Alternatively, one can create and annotate a `@Provides` method. Let's do some examples:
+This is when `@Scope` comes into play. When a class that is instantiated in a Dagger-2 component has a scoped annotation, Dagger-2 creates exactly one instance of the class returned by that function for each component instance. This also works for `@Provides` methods. Let's do some examples:
 
 First, we create our scope:
 
@@ -497,7 +498,7 @@ A a1 = root1.getA();
 A a2 = root2.getA();
 assert (a1 != a2)
 assert (a1.b != a2.b)
-assert (a1.b.c != a2.b.c)  // changed back to ==
+assert (a1.b.c != a2.b.c)  // changed back to !=
 ```
 
 One last thing: the component interface has to be annotated by the scope, too.
